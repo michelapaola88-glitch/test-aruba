@@ -3,19 +3,15 @@ name: Test Aruba Webmail
 on:
   push:
     branches: [ main ]
-  pull_request:
-    branches: [ main ]
+  workflow_dispatch:
 
 jobs:
   test:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Scarica il codice
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-      - name: Installa Python
-        uses: actions/setup-python@v4
+      - uses: actions/setup-python@v4
         with:
           python-version: '3.11'
 
@@ -24,5 +20,9 @@ jobs:
           pip install pytest playwright pytest-playwright
           playwright install --with-deps chromium
 
+      - name: Installa display virtuale
+        run: |
+          sudo apt-get install -y xvfb
+
       - name: Esegui i test
-        run: pytest tests/test_ui.py -v
+        run: xvfb-run pytest tests/test_ui.py -v

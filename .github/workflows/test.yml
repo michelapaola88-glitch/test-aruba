@@ -1,0 +1,28 @@
+name: Test Aruba Webmail
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Scarica il codice
+        uses: actions/checkout@v3
+
+      - name: Installa Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Installa dipendenze
+        run: |
+          pip install pytest playwright pytest-playwright
+          playwright install --with-deps chromium
+
+      - name: Esegui i test
+        run: pytest tests/test_ui.py -v
